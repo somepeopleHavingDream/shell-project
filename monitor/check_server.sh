@@ -3,7 +3,12 @@
 # tput sgr0 表示光标回归正常模式
 resettem=$(tput sgr0)
 
+# nginx服务器地址
 nginxServer='localhost:80'
+# mysql从服务器地址
+mysqlSlaveServer='localhost'
+
+# 检查Nginx服务的状态
 checkNginxServer()
 {
 	# -m 请求最大处理时间，单位为秒
@@ -20,4 +25,18 @@ checkNginxServer()
 	fi
 }
 
+# 检查mysql服务器的状态
+checkMySQLServer()
+{
+	# -z表示zero，表示扫描时不发送任何数据
+	# -w表示超时秒数，后面跟数字
+	# -v输出交互或出错信息，新手调试时尤为有用
+	nc -z -w2 $mysqlSlaveServer 3306
+	if [ $? -eq 0 ]; then
+		echo "connect $mysqlSlaveServer ok!"
+	fi
+}
+
 checkNginxServer
+echo
+checkMySQLServer
