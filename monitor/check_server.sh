@@ -37,7 +37,12 @@ checkMySQLServer()
 	# -v输出交互或出错信息，新手调试时尤为有用
 	nc -z -w2 $mysqlSlaveServer 3306
 	if [ $? -eq 0 ]; then
-		echo "connect $mysqlSlaveServer ok!"
+		mysql -u$mysqlUser -p$mysqlPassword -h$mysqlSlaveServer -e "show slave status\G" | grep "Slave_IO_Running" | awk '{if ($2 != "Yes") {print "Slave thread not running!"; exit 1}}'
+		if [ $? -eq 0 ]; then
+			mysql -u$mysqlUser -p$mysqlPassword -h$mysqlSlaveServer -e "show slave status\G" | grep "Seconds_Behind_Master"
+		fi
+	else
+		echo "Connect MySQL server not succeded"
 	fi
 }
 
