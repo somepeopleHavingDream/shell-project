@@ -8,6 +8,10 @@ nginxServer='localhost:80'
 # mysql从服务器地址
 mysqlSlaveServer='localhost'
 
+# mysql服务器帐号和密码
+mysqlUser='root'
+mysqlPassword='123456'
+
 # 检查Nginx服务的状态
 checkNginxServer()
 {
